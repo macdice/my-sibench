@@ -82,7 +82,7 @@ thread_main(void *arg)
 		}
 		else
 		{
-			result = PQexec(conn, "select * from sibench");
+			result = PQexec(conn, "select count(*) from sibench");
 			if (PQresultStatus(result) != PGRES_TUPLES_OK)
 				++context->failures;
 			++context->transactions;
@@ -168,7 +168,7 @@ main(int argc, char *argv[])
 	PQclear(result);
 	snprintf(buffer,
 			 sizeof(buffer),
-			 "create table sibench (i int primary key); insert into sibench select generate_series(1, %d); analyze",
+			 "create table sibench (i int primary key, x int); insert into sibench select generate_series(1, %d), 42; analyze",
 			 rows);
 	result = PQexec(conn, buffer);
 	if (PQresultStatus(result) != PGRES_COMMAND_OK)
